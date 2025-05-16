@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Comic Viewer</title>
+    <style>
+        /* Set a fixed width and height for the comic images */
+        img {
+            width: 100%; /* You can adjust this to fit the layout you want */
+            max-width: 500px; /* Set a max width for the image */
+            height: 300px; /* Set a fixed height for the image */
+            object-fit: contain; /* Make sure the image scales properly */
+        }
+
+        /* Styling for navigation buttons */
+        form {
+            display: inline-block;
+            margin: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        /* Styling for the input box */
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        .comic-info {
+            margin-bottom: 20px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Willkommen beim Comic Viewer</h1>
+
+<!-- Comic Title and Image -->
+<div class="comic-info">
+    <h2 th:text="${comic.title}">Comic Titel</h2>
+    <img th:src="${comic.url}" alt="Comic">
+</div>
+
+<!-- Show the current comic number -->
+<p>Aktuelles Comic Nummer: <span th:text="${comicIndex + 1}">1</span></p> <!-- Display the current comic index (1-based) -->
+
+<!-- Jump to a comic using a number -->
+<form th:action="@{/jump}" method="post">
+    <label for="comicNumber">Springe zu Comic (1-5): </label>
+    <input type="number" id="comicNumber" name="comicNumber" min="1" max="5" required>
+    <button type="submit">Gehe zu Comic</button>
+</form>
+
+<!-- Navigation: Next and Previous -->
+<div>
+    <form th:action="@{/prev}" method="post">
+        <input type="hidden" th:value="${comicIndex}" name="index">
+        <button type="submit">Vorheriges Comic</button>
+    </form>
+
+    <form th:action="@{/next}" method="post">
+        <input type="hidden" th:value="${comicIndex}" name="index">
+        <button type="submit">Nächstes Comic</button>
+    </form>
+</div>
+
+<!-- Error Display -->
+<div th:if="${error != null}" class="error">
+    <p th:text="${error}"></p>
+</div>
+
+</body>
+</html>

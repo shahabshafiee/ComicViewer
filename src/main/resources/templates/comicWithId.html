@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Comic Viewer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 700px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .fixed-area {
+            width: 100%;
+            text-align: center;
+        }
+
+        .comic-id-label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            background-color: #f9f9f9;
+        }
+
+        .comic-frame {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .comic-frame img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex: 1;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: #d8000c;
+            background-color: #ffbaba;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Comic Viewer</h1>
+
+
+
+
+
+    <div class="fixed-area">
+        <div th:if="${comic}">
+            <div class="comic-id-label">Comic ID:</div>
+            <textarea id="comicIdTextarea" readonly th:text="${comic.num}"></textarea>
+
+            <div class="comic-frame">
+                <img th:src="${comic.img}" th:alt="${comic.alt}" />
+            </div>
+
+            <div class="button-group">
+                <form th:action="@{/comic/xkcd/{id}(id=${comic.num - 1})}" method="get">
+                    <button type="submit">← Previous</button>
+                </form>
+                <form th:action="@{/comic/xkcd/{id}(id=${comic.num + 1})}" method="get">
+                    <button type="submit">Next →</button>
+                </form>
+            </div>
+        </div>
+
+
+
+
+        <!-- Form to add new comment -->
+        <div th:if="${comic != null}">
+        <form th:action="@{/comic/xkcd/{id}/comment(id=${comic.num})}" method="post">
+            <label for="newComment">Add a Comment:</label>
+            <textarea id="newComment" name="text" rows="4" placeholder="Write your comment here..." required></textarea>
+            <button type="submit">Submit Comment</button>
+        </form>
+        </div>
+
+        <!-- Display existing comments -->
+        <div th:if="${comic != null and comic.comments != null and !comic.comments.isEmpty()}">
+            <h2>Comments</h2>
+            <ul>
+                <li th:each="comment : ${comic.comments}" th:text="${comment.text}"></li>
+            </ul>
+        </div>
+
+
+
+        <div th:if="${error}" class="error">
+            <p th:text="${error}"></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

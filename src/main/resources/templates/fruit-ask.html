@@ -1,0 +1,14 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<h3>What is your favorite fruit?</h3>
+<form method="post" th:action="@{/fruit}" th:object="${fruit}">
+    <input type="text" th:field="*{fruit}" placeholder="Enter fruit name">
+    <input type="submit" value="Add"> <!-- Changed label -->
+</form>
+
+<h3>Popular fruits</h3>
+<ul>
+    <li th:each="fruit : ${popularFruits}" th:text="${fruit}"></li>
+</ul>
+</body>
+</html>
